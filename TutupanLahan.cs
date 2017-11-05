@@ -8,6 +8,7 @@ namespace LAPAN
 {
     public class TutupanLahan
     {
+        public int id { get; set; }
         public string no { get; set; }
         public string band1 { get; set; }
         public string band2 { get; set; }

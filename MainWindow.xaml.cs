@@ -29,6 +29,8 @@ namespace LAPAN
     /// </summary>
     public partial class MainWindow : Window
     {
+        List<Rule> datarules = new List<Rule>();
+        List<TutupanLahan> lisdata = new List<TutupanLahan>(); 
         public MainWindow()
         {
             InitializeComponent();
@@ -42,7 +44,7 @@ namespace LAPAN
             {
                 string pathFile = openFileDialog.FileName;
                 List<string[]> rows = File.ReadAllLines(pathFile).Select(x => x.Split(',')).ToList();
-                List<TutupanLahan> lisdata = new List<TutupanLahan>(); 
+             
 
                 //add cols to datatable:
                 string[] labelnya = rows[0];
@@ -118,21 +120,41 @@ namespace LAPAN
                              .ToList();
             List<string[]> rows = rule.Select(x => x.Split(':')).ToList();
 
-            List<Rule> datarules = new List<Rule>();
+          
             int no=1;
             foreach (var item in rows)
             {
                 if (item.Count() >= 2)
                 {
                     var r = new Rule();
-                    r.no = no++;
+                    r.id = no++;
                     r.kelas = item[0].Replace('=',' ');
                     r.rule = item[1].ToString();
                     datarules.Add(r);
+
+                }              
+            }
+                     
+            GridSourceRule.DataContext = datarules;
+        }
+
+        private void BarButtonItem_ItemClick_1(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e)
+        {
+            using (var db = new LapanContext())
+            {
+                try
+                {
+                    db.Rules.RemoveRange(db.Rules);
+                    db.Rules.AddRange(datarules);
+                    db.SaveChanges();
+                    MessageBox.Show("Data Berhasil Tersimpan", "Keterangan");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error");
                 }
             }
 
-            GridSourceRule.DataContext = datarules;
         }
     }
 }

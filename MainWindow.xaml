@@ -1,10 +1,13 @@
 ﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:dxr="http://schemas.devexpress.com/winfx/2008/xaml/ribbon" xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" x:Class="LAPAN.MainWindow"
+        xmlns:dxr="http://schemas.devexpress.com/winfx/2008/xaml/ribbon"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
+        xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars" 
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
+        x:Class="LAPAN.MainWindow"
         Title="Otomatisasi Tutupan Lahan" Height="618.47" Width="802.612">
     <Grid>
-
         <DockPanel>
             <dxr:RibbonControl DockPanel.Dock="Top" RibbonStyle="TabletOffice">
                 <dxr:RibbonControl.ApplicationMenu>
@@ -27,11 +30,11 @@
                     <dxb:BarButtonItem Content="Redo" Glyph="{dx:DXImage Image=Redo_16x16.png}"/>
                 </dxr:RibbonControl.ToolbarItems>
                 <dxr:RibbonDefaultPageCategory>
-                    <dxr:RibbonPage Caption="Model">
+                    <dxr:RibbonPage Caption="Modeling">
                         <dxr:RibbonPageGroup Caption="File">
                             <dxb:BarButtonItem Content="Open" ItemClick="BarButtonItem_ItemClick"  Glyph="{dx:DXImage Image=Open_16x16.png}" LargeGlyph="{dx:DXImage Image=Open_32x32.png}"/>
                             <dxb:BarButtonItem Content="New" Glyph="{dx:DXImage Image=New_16x16.png}" LargeGlyph="{dx:DXImage Image=New_32x32.png}"/>
-                            <dxb:BarButtonItem Content="Save" Glyph="{dx:DXImage Image=Save_16x16.png}" LargeGlyph="{dx:DXImage Image=Save_32x32.png}"/>
+                            <dxb:BarButtonItem Content="Save Rule" ItemClick="BarButtonItem_ItemClick_1" Glyph="{dx:DXImage Image=Save_16x16.png}" LargeGlyph="{dx:DXImage Image=Save_32x32.png}"/>
                         </dxr:RibbonPageGroup>
                         <dxr:RibbonPageGroup Caption="Ribbon Page Group">
                             <dxb:BarButtonItem Content="Cut" Glyph="{dx:DXImage Image=Cut_16x16.png}" LargeGlyph="{dx:DXImage Image=Cut_32x32.png}"/>
@@ -65,23 +68,23 @@
                 </dxr:RibbonStatusBarControl.RightItemLinks>
             </dxr:RibbonStatusBarControl>
             <StackPanel Orientation="Vertical" VerticalAlignment="Bottom">
-               <dxg:GridControl Height="300"   x:Name="GridSource" ItemsSource="{Binding}">
+                <dxg:GridControl Height="300" SelectionMode="Row"   x:Name="GridSource" ItemsSource="{Binding}">
                     <dxg:GridControl.Columns>
-                        <dxg:GridColumn Header="No" Binding="{Binding no, Mode=TwoWay}"/>
-                        <dxg:GridColumn Header="Band 1" Binding="{Binding band1, Mode=TwoWay}"/>
-                        <dxg:GridColumn Header="Band 2" Binding="{Binding band2, Mode=TwoWay}"/>
-                        <dxg:GridColumn Header="Band 3" Binding="{Binding band3, Mode=TwoWay}"/>
-                        <dxg:GridColumn Header="Kelas" Binding="{Binding kelas, Mode=TwoWay}"/>
+                        <dxg:GridColumn AllowEditing="False" Header="No" Binding="{Binding no, Mode=TwoWay}"/>
+                        <dxg:GridColumn AllowEditing="False" Header="Band 1" Binding="{Binding band1, Mode=TwoWay}"/>
+                        <dxg:GridColumn AllowEditing="False" Header="Band 2" Binding="{Binding band2, Mode=TwoWay}"/>
+                        <dxg:GridColumn AllowEditing="False" Header="Band 3" Binding="{Binding band3, Mode=TwoWay}"/>
+                        <dxg:GridColumn AllowEditing="False" Header="Kelas" Binding="{Binding kelas, Mode=TwoWay}"/>
                     </dxg:GridControl.Columns>
                     <dxg:GridControl.View>
                         <dxg:TableView ShowTotalSummary="True" AutoWidth="True"/>
                     </dxg:GridControl.View>
                 </dxg:GridControl>
-                <dxg:GridControl Height="300"  x:Name="GridSourceRule" ItemsSource="{Binding}">
+                <dxg:GridControl Height="300" SelectionMode="Row"  x:Name="GridSourceRule" ItemsSource="{Binding}">
                     <dxg:GridControl.Columns>
-                        <dxg:GridColumn Header="No" Binding="{Binding no, Mode=TwoWay}"/>
-                        <dxg:GridColumn Header="Kelas" Binding="{Binding kelas, Mode=TwoWay}"/>
-                        <dxg:GridColumn Header="Rule" Binding="{Binding rule, Mode=TwoWay}"/>
+                        <dxg:GridColumn AllowEditing="False" Header="No" Binding="{Binding id, Mode=TwoWay}"/>
+                        <dxg:GridColumn AllowEditing="False" Header="Kelas" Binding="{Binding kelas, Mode=TwoWay}"/>
+                        <dxg:GridColumn AllowEditing="False" Header="Rule" Binding="{Binding rule, Mode=TwoWay}"/>
                     </dxg:GridControl.Columns>
                     <dxg:GridControl.View>
                         <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True"/>
