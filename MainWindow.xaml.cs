@@ -20,7 +20,14 @@ using Accord.Statistics.Filters;
 using Accord.MachineLearning.DecisionTrees.Learning;
 using Accord.Math.Optimization.Losses;
 using Accord.MachineLearning.DecisionTrees.Rules;
+using Accord.MachineLearning.DecisionTrees;
 
+
+using Esri.ArcGISRuntime.ArcGISServices;
+using Esri.ArcGISRuntime.Mapping;
+using Esri.ArcGISRuntime.Rasters;
+using Esri.ArcGISRuntime.UI;
+using Esri.ArcGISRuntime.Geometry;
 
 namespace LAPAN
 {
@@ -30,7 +37,8 @@ namespace LAPAN
     public partial class MainWindow : Window
     {
         List<Rule> datarules = new List<Rule>();
-        List<TutupanLahan> lisdata = new List<TutupanLahan>(); 
+        List<TutupanLahan> lisdata = new List<TutupanLahan>();
+        DecisionTree tree = null;
         public MainWindow()
         {
             InitializeComponent();
@@ -44,13 +52,13 @@ namespace LAPAN
             {
                 string pathFile = openFileDialog.FileName;
                 List<string[]> rows = File.ReadAllLines(pathFile).Select(x => x.Split(',')).ToList();
-             
+
 
                 //add cols to datatable:
                 string[] labelnya = rows[0];
                 rows.RemoveAt(0);
                 int no = 1;
-            
+
                 foreach (var item in rows)
                 {
                     var data = new TutupanLahan();
@@ -61,7 +69,7 @@ namespace LAPAN
                     data.kelas = item[3];
                     lisdata.Add(data);
                 }
-              
+
                 GridSource.DataContext = lisdata;
                 RowsCount.Content = lisdata.Count;
 
@@ -76,7 +84,7 @@ namespace LAPAN
             // The first four columns contain the flower features
 
             string[][] text = data.ToArray<string[]>();
-            
+
             // The first four columns contain the flower features
             double[][] inputs = new double[data.Count][];
             string[] targets = new string[data.Count];
@@ -101,8 +109,9 @@ namespace LAPAN
             // And we can use the C4.5 for learning:
             C45Learning teacher = new C45Learning();
 
+
             // Finally induce the tree from the data:
-            var tree = teacher.Learn(inputs, outputs);
+            tree = teacher.Learn(inputs, outputs);
 
             // To get the estimated class labels, we can use
             int[] predicted = tree.Decide(inputs);
@@ -112,7 +121,6 @@ namespace LAPAN
 
             // Moreover, we may decide to convert our tree to a set of rules:
             DecisionSet rules = tree.ToRules();
-
             // And using the codebook, we can inspect the tree reasoning:
             string ruleText = rules.ToString(codebook, "Output",
                 System.Globalization.CultureInfo.InvariantCulture);
@@ -120,21 +128,21 @@ namespace LAPAN
                              .ToList();
             List<string[]> rows = rule.Select(x => x.Split(':')).ToList();
 
-          
-            int no=1;
+
+            int no = 1;
             foreach (var item in rows)
             {
                 if (item.Count() >= 2)
                 {
                     var r = new Rule();
                     r.id = no++;
-                    r.kelas = item[0].Replace('=',' ');
+                    r.kelas = item[0].Replace('=', ' ');
                     r.rule = item[1].ToString();
                     datarules.Add(r);
 
-                }              
+                }
             }
-                     
+
             GridSourceRule.DataContext = datarules;
         }
 
@@ -156,5 +164,94 @@ namespace LAPAN
             }
 
         }
+
+        private void BarButtonItem_ItemClick_2(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            var file = string.Empty;
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string pathFile = openFileDialog.FileName;
+                List<string[]> rows = File.ReadAllLines(pathFile).Select(x => x.Split(',')).ToList();
+                lisdata = new List<TutupanLahan>();
+                string[] labelnya = rows[0];
+                rows.RemoveAt(0);
+                int no = 1;
+
+                foreach (var item in rows)
+                {
+                    var data = new TutupanLahan();
+                    data.no = Convert.ToString(no++);
+                    data.band1 = item[0];
+                    data.band2 = item[1];
+                    data.band3 = item[2];
+                    data.kelas = item[3];
+                    lisdata.Add(data);
+                }
+                GridSourceTest.DataContext = lisdata;
+
+            }
+
+        }
+
+        private void BarButtonItem_ItemClick_3(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e)
+        {
+
+        }
+
+        private void RibbonControl_SelectedPageChanged(object sender, DevExpress.Xpf.Ribbon.RibbonPropertyChangedEventArgs e)
+        {
+            try
+            {
+                if (Ribbon.SelectedPage == Predict)
+                {
+                    PredictionGrid.Visibility = Visibility.Visible;
+                    ModelingGrid.Visibility = Visibility.Collapsed;
+                    GridSourceRule2.DataContext = datarules;
+                }
+                else if (Ribbon.SelectedPage == Model)
+                {
+                    PredictionGrid.Visibility = Visibility.Collapsed;
+                    ModelingGrid.Visibility = Visibility.Visible;
+                }
+                else if (Ribbon.SelectedPage == Map)
+                {
+                    PredictionGrid.Visibility = Visibility.Collapsed;
+                    ModelingGrid.Visibility = Visibility.Collapsed;
+                    MapGrid.Visibility = Visibility.Visible;
+                    LoadMap();
+                }
+            }
+            catch (Exception ae)
+            {
+                MessageBox.Show(ae.Message);
+            }
+        }
+
+        async void LoadMap()
+        {
+
+            Map myMap = new Map(Basemap.CreateImagery());
+
+            // Create uri to the map image layer
+            var serviceUri = new Uri(
+               "http://182.253.238.238:6080/arcgis/rest/services/Penutup_Lahan_BW/MapServer");
+
+            // Create new image layer from the url
+            ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(serviceUri);
+
+            await imageLayer.LoadAsync();
+
+            // Add created layer to the basemaps collection
+            myMap.Basemap.BaseLayers.Add(imageLayer);
+
+
+            // Assign the map to the MapView
+            MyMapView.Map = myMap;
+
+            await MyMapView.SetViewpointGeometryAsync(imageLayer.FullExtent);
+        }
+
+
     }
 }

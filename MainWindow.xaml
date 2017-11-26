@@ -5,11 +5,13 @@
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
         xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars" 
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
-        x:Class="LAPAN.MainWindow"
-        Title="Otomatisasi Tutupan Lahan" Height="618.47" Width="802.612">
+        xmlns:esri="http://schemas.esri.com/arcgis/runtime/2013"
+        x:Class="LAPAN.MainWindow"         
+        WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        Title="Otomatisasi Tutupan Lahan" >
     <Grid>
         <DockPanel>
-            <dxr:RibbonControl DockPanel.Dock="Top" RibbonStyle="TabletOffice">
+            <dxr:RibbonControl x:Name="Ribbon" DockPanel.Dock="Top" RibbonStyle="TabletOffice" SelectedPageChanged="RibbonControl_SelectedPageChanged">
                 <dxr:RibbonControl.ApplicationMenu>
                     <dxr:BackstageViewControl>
                         <dxr:BackstageTabItem Content="Last documents">
@@ -30,7 +32,7 @@
                     <dxb:BarButtonItem Content="Redo" Glyph="{dx:DXImage Image=Redo_16x16.png}"/>
                 </dxr:RibbonControl.ToolbarItems>
                 <dxr:RibbonDefaultPageCategory>
-                    <dxr:RibbonPage Caption="Modeling">
+                    <dxr:RibbonPage x:Name="Model" Caption="Modeling">
                         <dxr:RibbonPageGroup Caption="File">
                             <dxb:BarButtonItem Content="Open" ItemClick="BarButtonItem_ItemClick"  Glyph="{dx:DXImage Image=Open_16x16.png}" LargeGlyph="{dx:DXImage Image=Open_32x32.png}"/>
                             <dxb:BarButtonItem Content="New" Glyph="{dx:DXImage Image=New_16x16.png}" LargeGlyph="{dx:DXImage Image=New_32x32.png}"/>
@@ -42,17 +44,26 @@
                             <dxb:BarButtonItem Content="Paste" Glyph="{dx:DXImage Image=Paste_16x16.png}" LargeGlyph="{dx:DXImage Image=Paste_32x32.png}"/>
                         </dxr:RibbonPageGroup>
                     </dxr:RibbonPage>
-                    <dxr:RibbonPage Caption="Prediction">
+                    <dxr:RibbonPage x:Name="Predict" Caption="Prediction">
                         <dxr:RibbonPageGroup Caption="Text Alignment">
-                            <dxb:BarButtonItem Content="Open" ItemClick="BarButtonItem_ItemClick"  Glyph="{dx:DXImage Image=Open_16x16.png}" LargeGlyph="{dx:DXImage Image=Open_32x32.png}"/>
+                            <dxb:BarButtonItem Content="Open" ItemClick="BarButtonItem_ItemClick_2"  Glyph="{dx:DXImage Image=Open_16x16.png}" LargeGlyph="{dx:DXImage Image=Open_32x32.png}"/>
                             <dxb:BarButtonItem Content="New" Glyph="{dx:DXImage Image=New_16x16.png}" LargeGlyph="{dx:DXImage Image=New_32x32.png}"/>
-                            <dxb:BarButtonItem Content="Save" Glyph="{dx:DXImage Image=Save_16x16.png}" LargeGlyph="{dx:DXImage Image=Save_32x32.png}"/>
+                            <dxb:BarButtonItem Content="Predict" ItemClick="BarButtonItem_ItemClick_3"  Glyph="{dx:DXImage Image=Save_16x16.png}" LargeGlyph="{dx:DXImage Image=Save_32x32.png}"/>
+                        </dxr:RibbonPageGroup>
+                        <dxr:RibbonPageGroup Caption="Print">
+                            <dxb:BarButtonItem Content="Print..." Glyph="{dx:DXImage Image=Print_16x16.png}" LargeGlyph="{dx:DXImage Image=Print_32x32.png}"/>
+                        </dxr:RibbonPageGroup>
+                    </dxr:RibbonPage>
+                    <dxr:RibbonPage x:Name="Map" Caption="Map">
+                        <dxr:RibbonPageGroup Caption="Text Alignment">
+                            <dxb:BarButtonItem Content="New" Glyph="{dx:DXImage Image=New_16x16.png}" LargeGlyph="{dx:DXImage Image=New_32x32.png}"/>
                         </dxr:RibbonPageGroup>
                         <dxr:RibbonPageGroup Caption="Print">
                             <dxb:BarButtonItem Content="Print..." Glyph="{dx:DXImage Image=Print_16x16.png}" LargeGlyph="{dx:DXImage Image=Print_32x32.png}"/>
                         </dxr:RibbonPageGroup>
                     </dxr:RibbonPage>
                 </dxr:RibbonDefaultPageCategory>
+                
             </dxr:RibbonControl>
             <dxr:RibbonStatusBarControl DockPanel.Dock="Bottom">
                 <dxr:RibbonStatusBarControl.LeftItems>
@@ -67,7 +78,7 @@
                     <dxb:BarItemLink BarItemName="biRight"/>
                 </dxr:RibbonStatusBarControl.RightItemLinks>
             </dxr:RibbonStatusBarControl>
-            <StackPanel Orientation="Vertical" VerticalAlignment="Bottom">
+            <StackPanel x:Name="ModelingGrid" Orientation="Vertical" VerticalAlignment="Bottom">
                 <dxg:GridControl Height="300" SelectionMode="Row"   x:Name="GridSource" ItemsSource="{Binding}">
                     <dxg:GridControl.Columns>
                         <dxg:GridColumn AllowEditing="False" Header="No" Binding="{Binding no, Mode=TwoWay}"/>
@@ -90,6 +101,34 @@
                         <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True"/>
                     </dxg:GridControl.View>
                 </dxg:GridControl>
+            </StackPanel>
+            <StackPanel x:Name="PredictionGrid" Visibility="Collapsed" Orientation="Vertical" VerticalAlignment="Bottom">
+                <dxg:GridControl Height="300" SelectionMode="Row"  x:Name="GridSourceRule2" ItemsSource="{Binding}">
+                    <dxg:GridControl.Columns>
+                        <dxg:GridColumn AllowEditing="False" Header="No" Binding="{Binding id, Mode=TwoWay}"/>
+                        <dxg:GridColumn AllowEditing="False" Header="Kelas" Binding="{Binding kelas, Mode=TwoWay}"/>
+                        <dxg:GridColumn AllowEditing="False" Header="Rule" Binding="{Binding rule, Mode=TwoWay}"/>
+                    </dxg:GridControl.Columns>
+                    <dxg:GridControl.View>
+                        <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True"/>
+                    </dxg:GridControl.View>
+                </dxg:GridControl>
+                <dxg:GridControl Height="300" SelectionMode="Row"   x:Name="GridSourceTest" ItemsSource="{Binding}">
+                    <dxg:GridControl.Columns>
+                        <dxg:GridColumn AllowEditing="False" Header="No" Binding="{Binding no, Mode=TwoWay}"/>
+                        <dxg:GridColumn AllowEditing="False" Header="Band 1" Binding="{Binding band1, Mode=TwoWay}"/>
+                        <dxg:GridColumn AllowEditing="False" Header="Band 2" Binding="{Binding band2, Mode=TwoWay}"/>
+                        <dxg:GridColumn AllowEditing="False" Header="Band 3" Binding="{Binding band3, Mode=TwoWay}"/>
+                        <dxg:GridColumn AllowEditing="False" Header="Kelas" Binding="{Binding kelas, Mode=TwoWay}"/>
+                    </dxg:GridControl.Columns>
+                    <dxg:GridControl.View>
+                        <dxg:TableView ShowTotalSummary="True" AutoWidth="True"/>
+                    </dxg:GridControl.View>
+                </dxg:GridControl>
+               
+            </StackPanel>
+            <StackPanel x:Name="MapGrid" Orientation="Vertical" VerticalAlignment="Bottom">
+                <esri:MapView x:Name="MyMapView" Height="700"/>
             </StackPanel>
         </DockPanel>
 
