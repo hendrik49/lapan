@@ -46,8 +46,8 @@
                     </dxr:RibbonPage>
                     <dxr:RibbonPage x:Name="Predict" Caption="Prediction">
                         <dxr:RibbonPageGroup Caption="Text Alignment">
-                            <dxb:BarButtonItem Content="Open" ItemClick="BarButtonItem_ItemClick_2"  Glyph="{dx:DXImage Image=Open_16x16.png}" LargeGlyph="{dx:DXImage Image=Open_32x32.png}"/>
-                            <dxb:BarButtonItem Content="New" Glyph="{dx:DXImage Image=New_16x16.png}" LargeGlyph="{dx:DXImage Image=New_32x32.png}"/>
+                            <dxb:BarButtonItem Content="Load Rule" ItemClick="BarButtonItem_ItemClick_4" Glyph="{dx:DXImage Image=New_16x16.png}" LargeGlyph="{dx:DXImage Image=New_32x32.png}"/>
+                            <dxb:BarButtonItem Content="Open Test File" ItemClick="BarButtonItem_ItemClick_2"  Glyph="{dx:DXImage Image=Open_16x16.png}" LargeGlyph="{dx:DXImage Image=Open_32x32.png}"/>
                             <dxb:BarButtonItem Content="Predict" ItemClick="BarButtonItem_ItemClick_3"  Glyph="{dx:DXImage Image=Save_16x16.png}" LargeGlyph="{dx:DXImage Image=Save_32x32.png}"/>
                         </dxr:RibbonPageGroup>
                         <dxr:RibbonPageGroup Caption="Print">

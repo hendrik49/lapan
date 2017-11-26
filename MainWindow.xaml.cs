@@ -39,6 +39,8 @@ namespace LAPAN
         List<Rule> datarules = new List<Rule>();
         List<TutupanLahan> lisdata = new List<TutupanLahan>();
         DecisionTree tree = null;
+
+        List<string[]> rowstest;
         public MainWindow()
         {
             InitializeComponent();
@@ -173,6 +175,7 @@ namespace LAPAN
             {
                 string pathFile = openFileDialog.FileName;
                 List<string[]> rows = File.ReadAllLines(pathFile).Select(x => x.Split(',')).ToList();
+                rowstest = rows;
                 lisdata = new List<TutupanLahan>();
                 string[] labelnya = rows[0];
                 rows.RemoveAt(0);
@@ -188,6 +191,8 @@ namespace LAPAN
                     data.kelas = item[3];
                     lisdata.Add(data);
                 }
+
+              
                 GridSourceTest.DataContext = lisdata;
 
             }
@@ -196,6 +201,39 @@ namespace LAPAN
 
         private void BarButtonItem_ItemClick_3(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e)
         {
+            if (rowstest == null) {
+                MessageBox.Show("Mohon masukan Data Test");
+                return;
+            }
+            string[][] text = rowstest.ToArray<string[]>();
+
+            // The first four columns contain the flower features
+            double[][] inputs = new double[rowstest.Count][];
+
+            for (int i = 0; i < rowstest.Count; ++i)
+            {
+                inputs[i] = text[i].Skip(0).Take(text[i].Length - 1).Select(double.Parse).ToArray();
+            }
+
+            if (tree == null)
+            {
+                MessageBox.Show("Mohon Load Rule model terlebih dahulu");
+                return;
+            }
+            int[] actual = tree.Decide(inputs);
+
+            for (int i=0;i< actual.Length;i++)
+            {
+                if (actual[i] == 0)
+                    lisdata[i].kelas = "Air";
+                else if (actual[i] == 1)
+                    lisdata[i].kelas = "Tanah";
+                else if (actual[i] == 2)
+                    lisdata[i].kelas = "Vegetasi";
+            }
+
+            GridSourceTest.DataContext = lisdata;
+
 
         }
 
@@ -207,7 +245,6 @@ namespace LAPAN
                 {
                     PredictionGrid.Visibility = Visibility.Visible;
                     ModelingGrid.Visibility = Visibility.Collapsed;
-                    GridSourceRule2.DataContext = datarules;
                 }
                 else if (Ribbon.SelectedPage == Model)
                 {
@@ -250,6 +287,23 @@ namespace LAPAN
             MyMapView.Map = myMap;
 
             await MyMapView.SetViewpointGeometryAsync(imageLayer.FullExtent);
+        }
+
+        private void BarButtonItem_ItemClick_4(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e)
+        {
+            using (var db = new LapanContext())
+            {
+                try
+                {
+                    datarules = db.Rules.ToList();
+                    GridSourceRule2.DataContext = datarules;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error");
+                }
+            }
+
         }
 
 
