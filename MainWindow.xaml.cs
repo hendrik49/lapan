@@ -40,6 +40,7 @@ namespace LAPAN
     {
         List<Rule> datarules = new List<Rule>();
         List<TutupanLahan> lisdata = new List<TutupanLahan>();
+        List<TutupanLahan> lisdatatest = new List<TutupanLahan>();
         DecisionTree tree = null;
 
         List<string[]> rowstest;
@@ -67,10 +68,10 @@ namespace LAPAN
                 foreach (var item in rows)
                 {
                     var data = new TutupanLahan();
-                    data.no = Convert.ToString(no++);
-                    data.band1 = item[0];
-                    data.band2 = item[1];
-                    data.band3 = item[2];
+                    data.no = no++;
+                    data.band1 = double.Parse(item[0]);
+                    data.band2 = double.Parse(item[1]);
+                    data.band3 = double.Parse(item[2]);
                     data.kelas = item[3];
                     lisdata.Add(data);
                 }
@@ -85,9 +86,8 @@ namespace LAPAN
         public void DecisinTree(string[] labelnya, List<string[]> data)
         {
 
-
             // The first four columns contain the flower features
-
+            datarules = new List<Rule>();
             string[][] text = data.ToArray<string[]>();
 
             // The first four columns contain the flower features
@@ -177,27 +177,32 @@ namespace LAPAN
             if (openFileDialog.ShowDialog() == true)
             {
                 string pathFile = openFileDialog.FileName;
-                List<string[]> rows = File.ReadAllLines(pathFile).Select(x => x.Split(',')).ToList();
-                rowstest = rows;
-                lisdata = new List<TutupanLahan>();
-                string[] labelnya = rows[0];
-                rows.RemoveAt(0);
-                int no = 1;
-
-                foreach (var item in rows)
+                string extension = Path.GetExtension(openFileDialog.FileName);
+                if (extension.Equals(".csv"))
                 {
-                    var data = new TutupanLahan();
-                    data.no = Convert.ToString(no++);
-                    data.band1 = item[0];
-                    data.band2 = item[1];
-                    data.band3 = item[2];
-                    data.kelas = item[3];
-                    lisdata.Add(data);
+                    List<string[]> rows = File.ReadAllLines(pathFile).Select(x => x.Split(',')).ToList();
+                    rowstest = rows;
+                    lisdata = new List<TutupanLahan>();
+                    string[] labelnya = rows[0];
+                    rows.RemoveAt(0);
+                    int no = 1;
+
+                    foreach (var item in rows)
+                    {
+                        var data = new TutupanLahan();
+                        data.no = no++;
+                        data.band1 = double.Parse(item[0]);
+                        data.band2 = double.Parse(item[1]);
+                        data.band3 = double.Parse(item[2]);
+                        data.kelas = item[3];
+                        lisdata.Add(data);
+                    }
+                    GridSourceTest.DataContext = lisdata;
                 }
-
-
-                GridSourceTest.DataContext = lisdata;
-
+                else
+                {
+                    MessageBox.Show("Mohon masukan fail dengan ekstensi csv");
+                }
             }
 
         }
@@ -323,57 +328,111 @@ namespace LAPAN
             if (openFileDialog.ShowDialog() == true)
             {
                 string pathFile = openFileDialog.FileName;
-                try
+                string extension = Path.GetExtension(openFileDialog.FileName);
+                if (extension.Equals(".tif"))
                 {
-                    GdalConfiguration.ConfigureGdal();
-                    Gdal.AllRegister();
-
-                    Dataset ds = Gdal.Open(pathFile, Access.GA_ReadOnly);
-
-                    if (ds == null)
+                    try
                     {
-                        Console.WriteLine("Can't open " + pathFile);
-                        System.Environment.Exit(-1);
-                    }
+                        GdalConfiguration.ConfigureGdal();
+                        Gdal.AllRegister();
 
-                    Console.WriteLine("Raster dataset parameters:");
-                    Console.WriteLine("  Projection: " + ds.GetProjectionRef());
-                    Console.WriteLine("  RasterCount: " + ds.RasterCount);
-                    Console.WriteLine("  RasterSize (" + ds.RasterXSize + "," + ds.RasterYSize + ")");
+                        Dataset ds = Gdal.Open(pathFile, Access.GA_ReadOnly);
 
-                    Driver drv = ds.GetDriver();
-                    if (drv == null)
-                    {
-                        Console.WriteLine("Can't get driver.");
-                        System.Environment.Exit(-1);
-                    }
-
-                    Console.WriteLine("Using driver " + drv.LongName);
-
-                    for (int iBand = 1; iBand <= ds.RasterCount; iBand++)
-                    {
-                        Band band = ds.GetRasterBand(iBand);
-                        Console.WriteLine("Band " + iBand + " :");
-                        Console.WriteLine("DataType: " + band.DataType);
-                        Console.WriteLine("Size (" + band.XSize + "," + band.YSize + ")");
-                        Console.WriteLine("PaletteInterp: " + band.GetRasterColorInterpretation().ToString());
-
-                        for (int iOver = 0; iOver < band.GetOverviewCount(); iOver++)
+                        if (ds == null)
                         {
-                            Band over = band.GetOverview(iOver);
-                            Console.WriteLine("OverView " + iOver + " :");
-                            Console.WriteLine("DataType: " + over.DataType);
-                            Console.WriteLine("Size (" + over.XSize + "," + over.YSize + ")");
-                            Console.WriteLine("PaletteInterp: " + over.GetRasterColorInterpretation().ToString());
+                            Console.WriteLine("Can't open " + pathFile);
+                            System.Environment.Exit(-1);
                         }
+
+                        Console.WriteLine("Raster dataset parameters:");
+                        Console.WriteLine("  Projection: " + ds.GetProjectionRef());
+                        Console.WriteLine("  RasterCount: " + ds.RasterCount);
+                        Console.WriteLine("  RasterSize (" + ds.RasterXSize + "," + ds.RasterYSize + ")");
+
+                        Driver drv = ds.GetDriver();
+                        if (drv == null)
+                        {
+                            Console.WriteLine("Can't get driver.");
+                            System.Environment.Exit(-1);
+                        }
+
+                        Console.WriteLine("Using driver " + drv.LongName);
+
+                        //raster size  
+                        int rasterCols = ds.RasterXSize;
+                        int rasterRows = ds.RasterYSize;
+
+                        //Extract geotransform  
+                        double[] geotransform = new double[6];
+                        ds.GetGeoTransform(geotransform);
+
+                        //Get raster bounding box  
+                        double originX = geotransform[0];
+                        double originY = geotransform[3];
+                        double pixelWidth = geotransform[1];
+                        double pixelHeight = geotransform[5];
+
+
+                        double[] rasterValues;
+                        double[] rasterValues2;
+                        double[] rasterValues3;
+
+                        int rastWidth = rasterCols;
+                        int rastHeight = rasterRows;
+
+                        rasterValues = new double[rastWidth * rastHeight];
+                        rasterValues2 = new double[rastWidth * rastHeight];
+                        rasterValues3 = new double[rastWidth * rastHeight];
+
+                        for (int iBand = 1; iBand <= ds.RasterCount; iBand++)
+                        {
+                            Band band = ds.GetRasterBand(iBand);
+                            Console.WriteLine("Band " + iBand + " :");
+                            Console.WriteLine("DataType: " + band.DataType);
+                            Console.WriteLine("Size (" + band.XSize + "," + band.YSize + ")");
+
+                            if (iBand == 1)
+                            {
+                                band.ReadRaster(0, 0, rastWidth, rastHeight, rasterValues, rastWidth, rastHeight, 0, 0);
+                                rasterValues = rasterValues.Where(x => x > 0).ToArray();
+                            }
+                            else if (iBand == 2)
+                            {
+                                band.ReadRaster(0, 0, rastWidth, rastHeight, rasterValues2, rastWidth, rastHeight, 0, 0);
+                                rasterValues2 = rasterValues2.Where(x => x > 0).ToArray();
+                            }
+                            else if (iBand == 3)
+                            {
+                                band.ReadRaster(0, 0, rastWidth, rastHeight, rasterValues3, rastWidth, rastHeight, 0, 0);
+                                rasterValues3 = rasterValues3.Where(x => x > 0).ToArray();
+                            }
+
+                        }
+                        lisdatatest = new List<TutupanLahan>();
+                        double[][] inputs = new double[rasterValues3.Length][];
+                        for (int i = 0; i < rasterValues.Length; i++)
+                        {
+                            inputs[i] = new double[3] { rasterValues[i], rasterValues2[i], rasterValues3[i] };
+                            var data = new TutupanLahan();
+                            data.no =i;
+                            data.band1 =rasterValues[i];
+                            data.band2 = rasterValues2[i];
+                            data.band3 = rasterValues3[i];
+                            data.kelas = string.Empty;
+                            lisdatatest.Add(data);
+                        }
+
+                        GridSourceTest.DataContext = lisdatatest;
                     }
-
+                    catch (Exception x)
+                    {
+                        Console.WriteLine("Application error: " + x.Message);
+                    }
                 }
-                catch (Exception x)
+                else
                 {
-                    Console.WriteLine("Application error: " + x.Message);
+                    MessageBox.Show("Mohon masukan Data TIF");
                 }
-
             }
         }
 

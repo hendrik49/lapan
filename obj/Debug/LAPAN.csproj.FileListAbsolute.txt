@@ -234,4 +234,3 @@ C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\obj\Debug\LAPAN.csp
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\obj\Debug\LAPAN.exe.licenses
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\obj\Debug\LAPAN.exe
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\obj\Debug\LAPAN.pdb
-C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\obj\Debug\LAPAN.csprojResolveAssemblyReference.cache

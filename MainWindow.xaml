@@ -35,7 +35,6 @@
                     <dxr:RibbonPage x:Name="Model" Caption="Modeling">
                         <dxr:RibbonPageGroup Caption="File">
                             <dxb:BarButtonItem Content="Open" ItemClick="BarButtonItem_ItemClick"  Glyph="{dx:DXImage Image=Open_16x16.png}" LargeGlyph="{dx:DXImage Image=Open_32x32.png}"/>
-                            <dxb:BarButtonItem Content="Open TIF" ItemClick="BarButtonItem_ItemClick_5"  Glyph="{dx:DXImage Image=Open_16x16.png}" LargeGlyph="{dx:DXImage Image=Open_32x32.png}"/>
                             <dxb:BarButtonItem Content="New" Glyph="{dx:DXImage Image=New_16x16.png}" LargeGlyph="{dx:DXImage Image=New_32x32.png}"/>
                             <dxb:BarButtonItem Content="Save Rule" ItemClick="BarButtonItem_ItemClick_1" Glyph="{dx:DXImage Image=Save_16x16.png}" LargeGlyph="{dx:DXImage Image=Save_32x32.png}"/>
                         </dxr:RibbonPageGroup>
@@ -46,7 +45,8 @@
                     <dxr:RibbonPage x:Name="Predict" Caption="Classify">
                         <dxr:RibbonPageGroup Caption="Text Alignment">
                             <dxb:BarButtonItem Content="Load Rule" ItemClick="BarButtonItem_ItemClick_4" Glyph="{dx:DXImage Image=New_16x16.png}" LargeGlyph="{dx:DXImage Image=New_32x32.png}"/>
-                            <dxb:BarButtonItem Content="Open Test File" ItemClick="BarButtonItem_ItemClick_2"  Glyph="{dx:DXImage Image=Open_16x16.png}" LargeGlyph="{dx:DXImage Image=Open_32x32.png}"/>
+                            <dxb:BarButtonItem Content="Open CSV" ItemClick="BarButtonItem_ItemClick_2"  Glyph="{dx:DXImage Image=Open_16x16.png}" LargeGlyph="{dx:DXImage Image=Open_32x32.png}"/>
+                            <dxb:BarButtonItem Content="Open TIF" ItemClick="BarButtonItem_ItemClick_5"  Glyph="{dx:DXImage Image=Open_16x16.png}" LargeGlyph="{dx:DXImage Image=Open_32x32.png}"/>
                             <dxb:BarButtonItem Content="Classify" ItemClick="BarButtonItem_ItemClick_3"  Glyph="{dx:DXImage Image=Save_16x16.png}" LargeGlyph="{dx:DXImage Image=Save_32x32.png}"/>
                         </dxr:RibbonPageGroup>
                         <dxr:RibbonPageGroup Caption="Print">
