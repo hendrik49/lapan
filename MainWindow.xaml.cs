@@ -29,6 +29,8 @@ using Esri.ArcGISRuntime.Rasters;
 using Esri.ArcGISRuntime.UI;
 using Esri.ArcGISRuntime.Geometry;
 
+using OSGeo.GDAL;
+
 namespace LAPAN
 {
     /// <summary>
@@ -45,6 +47,7 @@ namespace LAPAN
         {
             InitializeComponent();
         }
+
 
         private void BarButtonItem_ItemClick(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e)
         {
@@ -192,7 +195,7 @@ namespace LAPAN
                     lisdata.Add(data);
                 }
 
-              
+
                 GridSourceTest.DataContext = lisdata;
 
             }
@@ -201,7 +204,8 @@ namespace LAPAN
 
         private void BarButtonItem_ItemClick_3(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e)
         {
-            if (rowstest == null) {
+            if (rowstest == null)
+            {
                 MessageBox.Show("Mohon masukan Data Test");
                 return;
             }
@@ -222,7 +226,7 @@ namespace LAPAN
             }
             int[] actual = tree.Decide(inputs);
 
-            for (int i=0;i< actual.Length;i++)
+            for (int i = 0; i < actual.Length; i++)
             {
                 if (actual[i] == 0)
                     lisdata[i].kelas = "Air";
@@ -271,8 +275,14 @@ namespace LAPAN
             Map myMap = new Map(Basemap.CreateImagery());
 
             // Create uri to the map image layer
+            //var serviceUri = new Uri(
+            // "http://182.253.238.238:6080/arcgis/rest/services/Penutup_Lahan/MapServer");
+
             var serviceUri = new Uri(
                "http://182.253.238.238:6080/arcgis/rest/services/Penutup_Lahan_BW/MapServer");
+
+
+
 
             // Create new image layer from the url
             ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(serviceUri);
@@ -306,6 +316,66 @@ namespace LAPAN
 
         }
 
+        private void BarButtonItem_ItemClick_5(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            var file = string.Empty;
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string pathFile = openFileDialog.FileName;
+                try
+                {
+                    GdalConfiguration.ConfigureGdal();
+                    Gdal.AllRegister();
+
+                    Dataset ds = Gdal.Open(pathFile, Access.GA_ReadOnly);
+
+                    if (ds == null)
+                    {
+                        Console.WriteLine("Can't open " + pathFile);
+                        System.Environment.Exit(-1);
+                    }
+
+                    Console.WriteLine("Raster dataset parameters:");
+                    Console.WriteLine("  Projection: " + ds.GetProjectionRef());
+                    Console.WriteLine("  RasterCount: " + ds.RasterCount);
+                    Console.WriteLine("  RasterSize (" + ds.RasterXSize + "," + ds.RasterYSize + ")");
+
+                    Driver drv = ds.GetDriver();
+                    if (drv == null)
+                    {
+                        Console.WriteLine("Can't get driver.");
+                        System.Environment.Exit(-1);
+                    }
+
+                    Console.WriteLine("Using driver " + drv.LongName);
+
+                    for (int iBand = 1; iBand <= ds.RasterCount; iBand++)
+                    {
+                        Band band = ds.GetRasterBand(iBand);
+                        Console.WriteLine("Band " + iBand + " :");
+                        Console.WriteLine("DataType: " + band.DataType);
+                        Console.WriteLine("Size (" + band.XSize + "," + band.YSize + ")");
+                        Console.WriteLine("PaletteInterp: " + band.GetRasterColorInterpretation().ToString());
+
+                        for (int iOver = 0; iOver < band.GetOverviewCount(); iOver++)
+                        {
+                            Band over = band.GetOverview(iOver);
+                            Console.WriteLine("OverView " + iOver + " :");
+                            Console.WriteLine("DataType: " + over.DataType);
+                            Console.WriteLine("Size (" + over.XSize + "," + over.YSize + ")");
+                            Console.WriteLine("PaletteInterp: " + over.GetRasterColorInterpretation().ToString());
+                        }
+                    }
+
+                }
+                catch (Exception x)
+                {
+                    Console.WriteLine("Application error: " + x.Message);
+                }
+
+            }
+        }
 
     }
 }

@@ -8,6 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("gdalconfiguration.vb")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("packages/esri.arcgisruntime.wpf.100.1.0/lib/net452/arcgisruntime100.1/resources/s" +
     "haders/atmosphere_accurate_ps_4_0.cso")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("packages/esri.arcgisruntime.wpf.100.1.0/lib/net452/arcgisruntime100.1/resources/s" +

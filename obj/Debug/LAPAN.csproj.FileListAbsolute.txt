@@ -1,4 +1,3 @@
-C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\LAPAN.exe.config
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\ArcGISRuntime100.1\resources\shaders\atmosphere_accurate_ps_4_0.cso
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\ArcGISRuntime100.1\resources\shaders\atmosphere_accurate_vs_4_0.cso
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\ArcGISRuntime100.1\resources\shaders\atmosphere_textured_ps_4_0.cso
@@ -155,6 +154,7 @@ C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\ArcGISRun
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\ArcGISRuntime100.1\resources\shaders\water_draw_ps_4_0.cso
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\ArcGISRuntime100.1\resources\shaders\water_draw_vs_4_0.cso
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\ArcGISRuntime100.1\client32\RuntimeCoreNet.dll
+C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\LAPAN.exe.config
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\LAPAN.exe
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\LAPAN.pdb
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\Accord.Controls.dll
@@ -168,9 +168,13 @@ C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\DevExpres
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\EntityFramework.dll
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\EntityFramework.SqlServer.dll
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\Esri.ArcGISRuntime.dll
+C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\gdalconst_csharp.dll
+C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\gdal_csharp.dll
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\Mono.Security.dll
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\Npgsql.dll
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\Npgsql.EntityFramework.dll
+C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\ogr_csharp.dll
+C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\osr_csharp.dll
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\ZedGraph.dll
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\EntityFramework.xml
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\EntityFramework.SqlServer.xml
@@ -219,7 +223,6 @@ C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\fi\Npgsql
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\fr\Npgsql.resources.dll
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\ja\Npgsql.resources.dll
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\bin\Debug\zh-CN\Npgsql.resources.dll
-C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\obj\Debug\LAPAN.csprojResolveAssemblyReference.cache
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\obj\Debug\MainWindow.baml
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\obj\Debug\MainWindow.g.cs
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\obj\Debug\App.g.cs
@@ -231,3 +234,4 @@ C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\obj\Debug\LAPAN.csp
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\obj\Debug\LAPAN.exe.licenses
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\obj\Debug\LAPAN.exe
 C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\obj\Debug\LAPAN.pdb
+C:\Users\Hendrik\documents\visual studio 2013\Projects\LAPAN\obj\Debug\LAPAN.csprojResolveAssemblyReference.cache
