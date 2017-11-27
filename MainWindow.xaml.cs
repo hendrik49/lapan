@@ -182,7 +182,7 @@ namespace LAPAN
                 {
                     List<string[]> rows = File.ReadAllLines(pathFile).Select(x => x.Split(',')).ToList();
                     rowstest = rows;
-                    lisdata = new List<TutupanLahan>();
+                    lisdatatest = new List<TutupanLahan>();
                     string[] labelnya = rows[0];
                     rows.RemoveAt(0);
                     int no = 1;
@@ -195,9 +195,10 @@ namespace LAPAN
                         data.band2 = double.Parse(item[1]);
                         data.band3 = double.Parse(item[2]);
                         data.kelas = item[3];
-                        lisdata.Add(data);
+                        lisdatatest.Add(data);
                     }
-                    GridSourceTest.DataContext = lisdata;
+                    GridSourceTest.DataContext = lisdatatest;
+                    RowsCount.Content = lisdatatest.Count;
                 }
                 else
                 {
@@ -441,6 +442,7 @@ namespace LAPAN
                         }
 
                         GridSourceTest.DataContext = lisdatatest;
+                        RowsCount.Content = lisdatatest.Count;
                     }
                     catch (Exception x)
                     {
