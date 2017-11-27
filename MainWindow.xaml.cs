@@ -42,7 +42,7 @@ namespace LAPAN
         List<TutupanLahan> lisdata = new List<TutupanLahan>();
         List<TutupanLahan> lisdatatest = new List<TutupanLahan>();
         DecisionTree tree = null;
-
+        double[][] inputsTIF;
         List<string[]> rowstest;
         public MainWindow()
         {
@@ -209,41 +209,59 @@ namespace LAPAN
 
         private void BarButtonItem_ItemClick_3(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e)
         {
-            if (rowstest == null)
+            if (rowstest == null && inputsTIF.Length == 0)
             {
                 MessageBox.Show("Mohon masukan Data Test");
                 return;
             }
-            string[][] text = rowstest.ToArray<string[]>();
-
-            // The first four columns contain the flower features
-            double[][] inputs = new double[rowstest.Count][];
-
-            for (int i = 0; i < rowstest.Count; ++i)
+            else if (rowstest != null)
             {
-                inputs[i] = text[i].Skip(0).Take(text[i].Length - 1).Select(double.Parse).ToArray();
-            }
+                string[][] text = rowstest.ToArray<string[]>();
 
-            if (tree == null)
+                // The first four columns contain the flower features
+                double[][] inputs = new double[rowstest.Count][];
+
+                for (int i = 0; i < rowstest.Count; ++i)
+                {
+                    inputs[i] = text[i].Skip(0).Take(text[i].Length - 1).Select(double.Parse).ToArray();
+                }
+
+                if (tree == null)
+                {
+                    MessageBox.Show("Mohon Load Rule model terlebih dahulu");
+                    return;
+                }
+                int[] actual = tree.Decide(inputs);
+
+                for (int i = 0; i < actual.Length; i++)
+                {
+                    if (actual[i] == 0)
+                        lisdata[i].kelas = "Air";
+                    else if (actual[i] == 1)
+                        lisdata[i].kelas = "Tanah";
+                    else if (actual[i] == 2)
+                        lisdata[i].kelas = "Vegetasi";
+                }
+
+                GridSourceTest.DataContext = lisdata;
+
+            }
+            else
             {
-                MessageBox.Show("Mohon Load Rule model terlebih dahulu");
-                return;
+                int[] actual = tree.Decide(inputsTIF);
+
+                for (int i = 0; i < actual.Length; i++)
+                {
+                    if (actual[i] == 0)
+                        lisdatatest[i].kelas = "Air";
+                    else if (actual[i] == 1)
+                        lisdatatest[i].kelas = "Tanah";
+                    else if (actual[i] == 2)
+                        lisdatatest[i].kelas = "Vegetasi";
+                }
+
+                GridSourceTest.DataContext = lisdata;
             }
-            int[] actual = tree.Decide(inputs);
-
-            for (int i = 0; i < actual.Length; i++)
-            {
-                if (actual[i] == 0)
-                    lisdata[i].kelas = "Air";
-                else if (actual[i] == 1)
-                    lisdata[i].kelas = "Tanah";
-                else if (actual[i] == 2)
-                    lisdata[i].kelas = "Vegetasi";
-            }
-
-            GridSourceTest.DataContext = lisdata;
-
-
         }
 
         private void RibbonControl_SelectedPageChanged(object sender, DevExpress.Xpf.Ribbon.RibbonPropertyChangedEventArgs e)
@@ -409,13 +427,13 @@ namespace LAPAN
 
                         }
                         lisdatatest = new List<TutupanLahan>();
-                        double[][] inputs = new double[rasterValues3.Length][];
+                        inputsTIF = new double[rasterValues3.Length][];
                         for (int i = 0; i < rasterValues.Length; i++)
                         {
-                            inputs[i] = new double[3] { rasterValues[i], rasterValues2[i], rasterValues3[i] };
+                            inputsTIF[i] = new double[3] { rasterValues[i], rasterValues2[i], rasterValues3[i] };
                             var data = new TutupanLahan();
-                            data.no =i;
-                            data.band1 =rasterValues[i];
+                            data.no = i;
+                            data.band1 = rasterValues[i];
                             data.band2 = rasterValues2[i];
                             data.band3 = rasterValues3[i];
                             data.kelas = string.Empty;
